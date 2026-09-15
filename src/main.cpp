@@ -6,6 +6,7 @@
  */
 
 #include <stdio.h>
+#include <atomic>
 #include "board.h"
 #include "hpm_gpio.hpp"
 #include "hpm_interrupt.h"
@@ -25,7 +26,7 @@ enum class LedMode : uint8_t
 
 struct ButtonIrqState
 {
-    volatile bool pending = false;
+    std::atomic<uint32_t> pending{0U};
     volatile uint32_t irq_count = 0u;
 };
 
@@ -73,7 +74,7 @@ inline float DutyToFloat(int32_t duty_permille)
 
 void OnButtonInterrupt(bool, ButtonIrqState* state)
 {
-    state->pending = true;
+    state->pending.store(1U, std::memory_order_release);
     ++state->irq_count;
 }
 
@@ -93,9 +94,8 @@ void ResetBlinkState(BlinkState* state, uint32_t now_ms)
 
 void PollButtonInterrupt(uint32_t now_ms, ButtonDebounceState* state)
 {
-    if (g_button_irq_state.pending)
+    if (g_button_irq_state.pending.exchange(0U, std::memory_order_acquire) != 0U)
     {
-        g_button_irq_state.pending = false;
         state->pending = true;
         state->event_ms = now_ms;
     }
@@ -154,7 +154,7 @@ void UpdateBreathingEffect(HPMPWM& pwm, BreathState* state, uint32_t now_ms)
     }
     state->last_update_ms = now_ms;
 
-    if (now_ms < state->hold_until_ms)
+    if (static_cast<int32_t>(now_ms - state->hold_until_ms) < 0)
     {
         return;
     }
