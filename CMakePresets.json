@@ -31,15 +31,6 @@
       }
     },
     {
-      "name": "debug-flash-sdram-xip",
-      "displayName": "Debug + flash_sdram_xip",
-      "inherits": "base",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "HPM_BUILD_TYPE": "flash_sdram_xip"
-      }
-    },
-    {
       "name": "release-flash-xip",
       "displayName": "Release + flash_xip",
       "inherits": "base",
@@ -60,13 +51,6 @@
     {
       "name": "debug-ram",
       "configurePreset": "debug-ram",
-      "targets": [
-        "demo.elf"
-      ]
-    },
-    {
-      "name": "debug-flash-sdram-xip",
-      "configurePreset": "debug-flash-sdram-xip",
       "targets": [
         "demo.elf"
       ]
