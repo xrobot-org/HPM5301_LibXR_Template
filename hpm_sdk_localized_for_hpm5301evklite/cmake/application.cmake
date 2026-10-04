@@ -318,9 +318,10 @@ normalize_size_string_in_hex(STACK_SIZE_HEX "${STACK_SIZE}")
 sdk_linker_global_symbols("_heap_size=${HEAP_SIZE_HEX}")
 sdk_linker_global_symbols("_stack_size=${STACK_SIZE_HEX}")
 
-# Skip compiler check
-set(CMAKE_C_COMPILER_FORCED 1)
-set(CMAKE_CXX_COMPILER_FORCED 1)
+# Probe real language/ABI support without requiring a runnable target executable.
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(CMAKE_C_COMPILER_FORCED 0)
+set(CMAKE_CXX_COMPILER_FORCED 0)
 
 # Enable C, C++, and ASM languages
 enable_language(C CXX ASM)
