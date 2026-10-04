@@ -17,15 +17,11 @@ libxr/                                 LibXR 子模块
 
 The template targets the HPMicro HPM5301EVKLite board (HPM5301, RISC-V, 1 MB on-board QSPI NOR flash) without an operating system; the peripherals are provided by the LibXR `hpm` driver. The project is an HPM SDK application: `CMakeLists.txt` points `HPM_SDK_BASE` at the localized SDK in the repository (`hpm_sdk_localized_for_hpm5301evklite/`, HPM SDK 1.11.0, with the board fixed to `hpm5301evklite`). `cmake/LibXR.CMake` brings in LibXR with `LIBXR_SYSTEM None` and `LIBXR_DRIVER hpm` and passes the SDK compile options to the `xr` target. LibXR is the Git submodule `libxr/` at `https://github.com/xrobot-org/libxr.git`, and the submodule commit recorded in this repository pins the LibXR version in use.
 
-## 2. 配置一览 / Configurations
+## 2. 示例程序 / Example Application
 
-| 配置 | 用途 |
-| --- | --- |
-| `src/main.cpp` | 按键切换灯效：创建 `HPMTimebase`，由 PWM（`HPMPWM`，GPTMR0 通道 2，PB10，1 kHz）输出灯效波形。用户按键 PA3 配置为中断输入（`HPMGPIO`），中断中置位标志，主循环完成 30 ms 消抖。灯效有两种模式：呼吸（占空比 2% 至 90%，每 20 ms 变化 0.8%，两端各保持 500 ms）和 1 Hz 闪烁，每次按键在两种模式间切换。板子定义的 LED 引脚 PA10 配置为模拟高阻，以免加载外部接到 PB10 的 PWM 信号 |
+示例程序 `src/main.cpp` 由按键切换灯效：创建 `HPMTimebase`，由 PWM（`HPMPWM`，GPTMR0 通道 2，PB10，1 kHz）输出灯效波形。用户按键 PA3 配置为中断输入（`HPMGPIO`），中断中置位标志，主循环完成 30 ms 消抖。灯效有两种模式：呼吸（占空比 2% 至 90%，每 20 ms 变化 0.8%，两端各保持 500 ms）和 1 Hz 闪烁，每次按键在两种模式间切换。板子定义的 LED 引脚 PA10 配置为模拟高阻，以免加载外部接到 PB10 的 PWM 信号。
 
-| Configuration | Purpose |
-| --- | --- |
-| `src/main.cpp` | Light effect selected by a key: creates `HPMTimebase`, and a PWM (`HPMPWM`, GPTMR0 channel 2, PB10, 1 kHz) outputs the effect waveform. The user key on PA3 is an interrupt input (`HPMGPIO`) whose handler sets a flag, and the main loop debounces it over 30 ms. The effect has two modes, breathing (duty cycle 2% to 90%, changing by 0.8% every 20 ms, held 500 ms at each end) and a 1 Hz blink, and each key press switches between them. The LED pin defined by the board, PA10, is set to analog high impedance so that the external PWM signal connected to PB10 is not loaded |
+The example application `src/main.cpp` selects a light effect with a key: it creates `HPMTimebase`, and a PWM (`HPMPWM`, GPTMR0 channel 2, PB10, 1 kHz) outputs the effect waveform. The user key on PA3 is an interrupt input (`HPMGPIO`) whose handler sets a flag, and the main loop debounces it over 30 ms. The effect has two modes, breathing (duty cycle 2% to 90%, changing by 0.8% every 20 ms, held 500 ms at each end) and a 1 Hz blink, and each key press switches between them. The LED pin defined by the board, PA10, is set to analog high impedance so that the external PWM signal connected to PB10 is not loaded.
 
 ## 3. 构建 / Build
 
@@ -69,6 +65,8 @@ openocd -c "set HPM_SDK_BASE ${HPM_SDK_BASE}; set BOARD hpm5301evklite; set PROB
 With the `flash_xip` presets the firmware executes from the on-board QSPI NOR flash, and with the `ram` preset it is loaded into RAM. The board boots from flash when its boot switch is OFF. The SDK provides OpenOCD configurations in `hpm_sdk_localized_for_hpm5301evklite/boards/openocd/`, and `boards/hpm5301evklite/hpm5301evklite.yaml` names CMSIS-DAP as the default probe of the board. With the HPMicro build of OpenOCD, the debug server starts as in the commands above, which follow the usage described at the top of the SDK configuration file.
 
 Then `riscv32-unknown-elf-gdb` connects and downloads `build/output/demo.elf`. The board interfaces, jumpers and pins are described in `boards/hpm5301evklite/README_en.rst` in the SDK. At run time PB10 outputs the breathing PWM, a press of the user key switches to a 1 Hz blink, and another press returns to breathing.
+
+## 许可 / License
 
 本仓库以 Apache-2.0 发布，见 [LICENSE](LICENSE)；`CMakeLists.txt` 和 `src/main.cpp` 的文件头保留 HPMicro 的 BSD-3-Clause 声明，`hpm_sdk_localized_for_hpm5301evklite/` 中的 HPM SDK 保留其自身的许可，见该目录下的 `LICENSE`。
 
