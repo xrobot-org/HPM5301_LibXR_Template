@@ -75,7 +75,7 @@ inline float DutyToFloat(int32_t duty_permille)
 void OnButtonInterrupt(bool, ButtonIrqState* state)
 {
     state->pending.store(1U, std::memory_order_release);
-    ++state->irq_count;
+    state->irq_count = state->irq_count + 1u;
 }
 
 void ResetBreathingState(BreathState* state, uint32_t now_ms)
