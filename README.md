@@ -4,7 +4,7 @@ HPM5301EVKLite 的 LibXR 模板工程 / LibXR template project for the HPM5301EV
 
 ## 1. 板子与平台 / Board and Platform
 
-模板面向 HPMicro HPM5301EVKLite 开发板（HPM5301，RISC-V，板载 1 MB QSPI NOR Flash），无操作系统，外设由 LibXR 的 `hpm` 驱动提供。工程是 HPM SDK 应用工程：`CMakeLists.txt` 把 `HPM_SDK_BASE` 指向仓库内本地化的 SDK（`hpm_sdk_localized_for_hpm5301evklite/`，HPM SDK 1.11.0，板子固定为 `hpm5301evklite`），不需要另行安装 SDK。`cmake/LibXR.CMake` 以 `LIBXR_SYSTEM None`、`LIBXR_DRIVER hpm` 接入 LibXR，并把 SDK 的编译选项传给 `xr` 目标。LibXR 是 `libxr/` 下的 Git 子模块，地址为 `https://github.com/xrobot-org/libxr.git`，所用版本由提交记录固定。
+模板面向 HPMicro HPM5301EVKLite 开发板（HPM5301，RISC-V，板载 1 MB QSPI NOR Flash），无操作系统，外设由 LibXR 的 `hpm` 驱动提供。工程是 HPM SDK 应用工程：`CMakeLists.txt` 把 `HPM_SDK_BASE` 指向仓库内本地化的 SDK（`hpm_sdk_localized_for_hpm5301evklite/`，HPM SDK 1.11.0，板子固定为 `hpm5301evklite`）。`cmake/LibXR.CMake` 以 `LIBXR_SYSTEM None`、`LIBXR_DRIVER hpm` 接入 LibXR，并把 SDK 的编译选项传给 `xr` 目标。LibXR 是 `libxr/` 下的 Git 子模块，地址为 `https://github.com/xrobot-org/libxr.git`，本仓库记录的子模块提交固定所用的 LibXR 版本。
 
 ```text
 src/main.cpp                           应用代码 main()
@@ -15,7 +15,7 @@ hpm_sdk_localized_for_hpm5301evklite/  本地化的 HPM SDK
 libxr/                                 LibXR 子模块
 ```
 
-The template targets the HPMicro HPM5301EVKLite board (HPM5301, RISC-V, 1 MB on-board QSPI NOR flash) without an operating system; the peripherals are provided by the LibXR `hpm` driver. The project is an HPM SDK application: `CMakeLists.txt` points `HPM_SDK_BASE` at the localized SDK in the repository (`hpm_sdk_localized_for_hpm5301evklite/`, HPM SDK 1.11.0, with the board fixed to `hpm5301evklite`), so no separate SDK installation is needed. `cmake/LibXR.CMake` brings in LibXR with `LIBXR_SYSTEM None` and `LIBXR_DRIVER hpm` and passes the SDK compile options to the `xr` target. LibXR is the Git submodule `libxr/` at `https://github.com/xrobot-org/libxr.git`, and the commit record pins the version in use.
+The template targets the HPMicro HPM5301EVKLite board (HPM5301, RISC-V, 1 MB on-board QSPI NOR flash) without an operating system; the peripherals are provided by the LibXR `hpm` driver. The project is an HPM SDK application: `CMakeLists.txt` points `HPM_SDK_BASE` at the localized SDK in the repository (`hpm_sdk_localized_for_hpm5301evklite/`, HPM SDK 1.11.0, with the board fixed to `hpm5301evklite`). `cmake/LibXR.CMake` brings in LibXR with `LIBXR_SYSTEM None` and `LIBXR_DRIVER hpm` and passes the SDK compile options to the `xr` target. LibXR is the Git submodule `libxr/` at `https://github.com/xrobot-org/libxr.git`, and the submodule commit recorded in this repository pins the LibXR version in use.
 
 ## 2. 配置一览 / Configurations
 
