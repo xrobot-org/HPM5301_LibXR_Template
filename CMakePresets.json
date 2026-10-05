@@ -10,7 +10,10 @@
       "name": "base",
       "hidden": true,
       "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build"
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "BOARD": "hpm5301evklite"
+      }
     },
     {
       "name": "debug-flash-xip",
