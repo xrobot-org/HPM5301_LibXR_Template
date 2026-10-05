@@ -1,15 +1,15 @@
 {
-  "clientKey": "b9415309f16f11a37f3b7948b2640b67",
-  "secretKey": "dbe2cea6ff507a4e551ea8584bacef23",
+  "clientKey": "9fd216b94bc7f2bc70ed34b6d619677f",
+  "secretKey": "180f2d2b3bed48f96deddae2d9da42fe",
   "content": {
-    "pid": "4f3bed50-f93c-461b-b27e-babfdccf03e9",
+    "pid": "45fc51f4-3ab5-4cf8-bb49-9f282db5197f",
     "info": {
       "projectName": "tool_config",
       "sdkName": "1.12.0",
       "socName": "HPM5301",
       "packageName": "QFN48",
-      "createTime": 1781446951444,
-      "updateTime": 1789025871688,
+      "createTime": 1791229842930,
+      "updateTime": 1791232196457,
       "vscodePid": "66927f38-37ed-42b1-8491-934af04e0eeb"
     },
     "pinmux": {
@@ -91,6 +91,135 @@
             "PB13": {
               "signal": "GPIO.A.B[13]",
               "padCtls": {}
+            }
+          }
+        },
+        "init_bsp_pins": {
+          "selectPins": {
+            "PA01": {
+              "signal": "UART0.A.RXD",
+              "padCtls": {}
+            },
+            "PA00": {
+              "signal": "UART0.A.TXD",
+              "padCtls": {}
+            },
+            "PB15": {
+              "signal": "UART3.B.TXD",
+              "padCtls": {}
+            },
+            "PB14": {
+              "signal": "UART3.B.RXD",
+              "padCtls": {}
+            },
+            "PB13": {
+              "signal": "I2C3.C.SCL",
+              "padCtls": {
+                "LOOP_BACK": "1",
+                "OD": "1",
+                "PE": "1",
+                "PS": "1"
+              }
+            },
+            "PB12": {
+              "signal": "I2C3.C.SDA",
+              "padCtls": {
+                "PE": "1",
+                "PS": "1",
+                "OD": "1",
+                "LOOP_BACK": "1"
+              }
+            },
+            "PA29": {
+              "signal": "SPI1.A.MOSI",
+              "padCtls": {
+                "SR": "1",
+                "SPD": "3"
+              }
+            },
+            "PA28": {
+              "signal": "SPI1.A.MISO",
+              "padCtls": {
+                "SPD": "3",
+                "SR": "1"
+              }
+            },
+            "PA26": {
+              "signal": "SPI1.A.CS[0]",
+              "padCtls": {
+                "SR": "1",
+                "SPD": "3",
+                "PE": "1",
+                "PS": "1"
+              }
+            },
+            "PA27": {
+              "signal": "SPI1.A.SCLK",
+              "padCtls": {
+                "LOOP_BACK": "1",
+                "SR": "1",
+                "SPD": "3"
+              }
+            },
+            "PB10": {
+              "signal": "ADC0.A.IN2",
+              "padCtls": {}
+            },
+            "PB09": {
+              "signal": "ACMP.G.COMP[1]",
+              "padCtls": {}
+            },
+            "PB11": {
+              "signal": "ACMP.A.CMP1_INN4",
+              "padCtls": {}
+            },
+            "PA10": {
+              "signal": "GPIO.A.A[10]",
+              "padCtls": {}
+            },
+            "PA03": {
+              "signal": "GPIO.A.A[03]",
+              "padCtls": {
+                "PE": "1",
+                "PS": "0",
+                "HYS": "1"
+              }
+            },
+            "PA25": {
+              "signal": "USBPHY.A.USB_DM",
+              "padCtls": {}
+            },
+            "PA24": {
+              "signal": "USBPHY.A.USB_DP",
+              "padCtls": {}
+            },
+            "PY01": {
+              "signal": "USB0.C.OC",
+              "padCtls": {}
+            },
+            "PY00": {
+              "signal": "USB0.C.ID",
+              "padCtls": {}
+            },
+            "PB08": {
+              "signal": "GPTMR0.B.COMP[1]",
+              "padCtls": {}
+            }
+          },
+          "managers": {
+            "gpiom": {
+              "PA10": {
+                "direction": "1",
+                "gpioController": "1",
+                "outputLevel": "1",
+                "gpioControllerHide": "[]"
+              },
+              "PA03": {
+                "direction": "0",
+                "gpioController": "1",
+                "interrupt": "0",
+                "gpioControllerHide": "[]"
+              }
             }
           }
         },
@@ -471,7 +600,8 @@
         "init_gptmr1_channel3_pin_as_output",
         "init_clk_ref_pin",
         "init_brownout_indicate_pin",
-        "init_trgm_gptmr0_cap2_invert_pins"
+        "init_trgm_gptmr0_cap2_invert_pins",
+        "init_bsp_pins"
       ]
     },
     "clock": {

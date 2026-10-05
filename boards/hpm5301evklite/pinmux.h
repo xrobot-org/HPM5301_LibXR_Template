@@ -47,6 +47,7 @@ void init_gptmr1_channel3_pin_as_output(void);
 void init_clk_ref_pin(void);
 void init_brownout_indicate_pin(void);
 void init_trgm_gptmr0_cap2_invert_pins(void);
+void init_bsp_pins(void);
 
 #ifdef __cplusplus
 }
