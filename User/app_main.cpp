@@ -9,7 +9,6 @@
 #include "board.h"
 #include "hpm_gpio.hpp"
 #include "hpm_i2c.hpp"
-#include "hpm_interrupt.h"
 #include "hpm_pwm.hpp"
 #include "hpm_timebase.hpp"
 #include "libxr.hpp"
@@ -30,10 +29,6 @@ static void OnKeyInterrupt(bool in_isr, std::atomic<uint32_t>* count)
 
 // DMA buffers: HPMGPIO, HPMI2C and HPMPWM need none. The UART and SPI buffers are added
 // together with their drivers.
-
-// GPIO0 port A interrupt (KEY, PA03): hand the port over to LibXR.
-SDK_DECLARE_EXT_ISR_M(BOARD_APP_GPIO_IRQ, key_gpio_isr)
-void key_gpio_isr(void) { libxr_hpm_gpio_check_interrupt(BOARD_APP_GPIO_INDEX); }
 
 extern "C" void app_main(void)
 {
