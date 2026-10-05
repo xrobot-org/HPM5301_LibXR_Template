@@ -68,5 +68,3 @@ Thumbs.db
 /Modules/CMakeLists.txt
 /Modules/*/
 
-# HPM SDK clone made by CI
-/.hpm_sdk/

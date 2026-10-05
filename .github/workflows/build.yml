@@ -12,9 +12,6 @@ on:
 permissions:
   contents: read
 
-env:
-  HPM_SDK_VERSION: v1.13.0
-
 jobs:
   # Configuration check: formatting of the XRobot YAML files and a locked module resolution.
   check:
@@ -52,23 +49,11 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Cache the HPM SDK
-        id: sdk-cache
-        uses: actions/cache@v4
-        with:
-          path: .hpm_sdk
-          key: hpm-sdk-${{ env.HPM_SDK_VERSION }}
-
-      - name: Fetch the HPM SDK
-        if: steps.sdk-cache.outputs.cache-hit != 'true'
+      # The image provides the HPM SDK and the toolchain (HPM_SDK_BASE,
+      # GNURISCV_TOOLCHAIN_PATH).
+      - name: Show the SDK and the submodules
         run: |
-          git clone --depth 1 --branch "$HPM_SDK_VERSION" \
-            https://github.com/hpmicro/hpm_sdk .hpm_sdk
-
-      - name: Select the SDK and the toolchain
-        run: |
-          echo "HPM_SDK_BASE=$GITHUB_WORKSPACE/.hpm_sdk" >> "$GITHUB_ENV"
-          echo "GNURISCV_TOOLCHAIN_PATH=${XR_HPM_TOOLCHAIN_ROOT:-/opt/hpm-riscv32-unknown-elf}" >> "$GITHUB_ENV"
+          cat "$HPM_SDK_BASE/VERSION"
           git config --global --add safe.directory '*'
           git submodule status
 
@@ -99,23 +84,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Cache the HPM SDK
-        id: sdk-cache
-        uses: actions/cache@v4
-        with:
-          path: .hpm_sdk
-          key: hpm-sdk-${{ env.HPM_SDK_VERSION }}
-
-      - name: Fetch the HPM SDK
-        if: steps.sdk-cache.outputs.cache-hit != 'true'
-        run: |
-          git clone --depth 1 --branch "$HPM_SDK_VERSION" \
-            https://github.com/hpmicro/hpm_sdk .hpm_sdk
-
       - name: Update LibXR to master
         run: |
-          echo "HPM_SDK_BASE=$GITHUB_WORKSPACE/.hpm_sdk" >> "$GITHUB_ENV"
-          echo "GNURISCV_TOOLCHAIN_PATH=${XR_HPM_TOOLCHAIN_ROOT:-/opt/hpm-riscv32-unknown-elf}" >> "$GITHUB_ENV"
           git config --global --add safe.directory '*'
           git -C libxr fetch --depth 1 origin master
           git -C libxr checkout --detach FETCH_HEAD
