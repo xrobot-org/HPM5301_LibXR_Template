@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Path to your local LibXR repository.
@@ -36,10 +36,20 @@ if(DEFINED APP_ELF_NAME AND TARGET ${APP_ELF_NAME})
     target_link_libraries(${APP_ELF_NAME} xr)
 endif()
 
-# Keep app in debug mode while shrinking LibXR binary size.
+# Keep app in debug mode while shrinking LibXR binary size. The debug-ram preset runs all
+# code from the 128 KB ILM, which LibXR built at -O0 does not fit into.
 if(TARGET xr)
     string(TOLOWER "${CMAKE_BUILD_TYPE}" _libxr_build_type)
     if(_libxr_build_type STREQUAL "debug")
-        target_compile_options(xr PRIVATE -O0)
+        target_compile_options(xr PRIVATE -Os)
     endif()
+endif()
+
+# Treat warnings in LibXR and in the application as errors; the SDK library targets keep
+# the SDK's own warning flags.
+if(TARGET xr)
+    target_compile_options(xr PRIVATE -Werror)
+endif()
+if(TARGET app)
+    target_compile_options(app PRIVATE -Werror)
 endif()

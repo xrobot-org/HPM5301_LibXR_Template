@@ -12,7 +12,32 @@ on:
 permissions:
   contents: read
 
+env:
+  HPM_SDK_VERSION: v1.11.0
+
 jobs:
+  # Configuration check: formatting of the XRobot YAML files and a locked module resolution.
+  check:
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/xrobot-org/docker-image-hpm:main
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install XRobot
+        run: |
+          git config --global --add safe.directory '*'
+          pip install "xrobot==$(sed -n 's/^xrobot: *//p' Modules/modules.yaml)"
+
+      - name: Check the configuration format
+        run: xrobot format --check
+
+      - name: Resolve the modules from xrobot.lock
+        run: xrobot setup --frozen
+
   build:
     if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
@@ -27,11 +52,30 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Select the toolchain
+      - name: Cache the HPM SDK
+        id: sdk-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/hpm_sdk
+          key: hpm-sdk-${{ env.HPM_SDK_VERSION }}
+
+      - name: Fetch the HPM SDK
+        if: steps.sdk-cache.outputs.cache-hit != 'true'
         run: |
+          git clone --depth 1 --branch "$HPM_SDK_VERSION" \
+            https://github.com/hpmicro/hpm_sdk "${{ runner.temp }}/hpm_sdk"
+
+      - name: Select the SDK and the toolchain
+        run: |
+          echo "HPM_SDK_BASE=${{ runner.temp }}/hpm_sdk" >> "$GITHUB_ENV"
           echo "GNURISCV_TOOLCHAIN_PATH=${XR_HPM_TOOLCHAIN_ROOT:-/opt/hpm-riscv32-unknown-elf}" >> "$GITHUB_ENV"
           git config --global --add safe.directory '*'
           git submodule status
+
+      - name: Resolve the XRobot modules
+        run: |
+          pip install "xrobot==$(sed -n 's/^xrobot: *//p' Modules/modules.yaml)"
+          xrobot setup --frozen
 
       - name: Configure
         run: cmake --preset ${{ matrix.preset }}
@@ -55,13 +99,32 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Cache the HPM SDK
+        id: sdk-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/hpm_sdk
+          key: hpm-sdk-${{ env.HPM_SDK_VERSION }}
+
+      - name: Fetch the HPM SDK
+        if: steps.sdk-cache.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch "$HPM_SDK_VERSION" \
+            https://github.com/hpmicro/hpm_sdk "${{ runner.temp }}/hpm_sdk"
+
       - name: Update LibXR to master
         run: |
+          echo "HPM_SDK_BASE=${{ runner.temp }}/hpm_sdk" >> "$GITHUB_ENV"
           echo "GNURISCV_TOOLCHAIN_PATH=${XR_HPM_TOOLCHAIN_ROOT:-/opt/hpm-riscv32-unknown-elf}" >> "$GITHUB_ENV"
           git config --global --add safe.directory '*'
           git -C libxr fetch --depth 1 origin master
           git -C libxr checkout --detach FETCH_HEAD
           git -C libxr log -1 --format='LibXR master: %H %s'
+
+      - name: Resolve the XRobot modules
+        run: |
+          pip install "xrobot==$(sed -n 's/^xrobot: *//p' Modules/modules.yaml)"
+          xrobot setup --frozen
 
       - name: Configure
         run: cmake --preset release-flash-xip
