@@ -17,6 +17,9 @@ set(BOARD ${LOCALIZED_BOARD})
 ### END ###
 
 
+# LibXR HPM drivers require the HPM SDK dma_mgr component.
+set(CONFIG_DMA_MGR 1)
+
 find_package(hpm-sdk REQUIRED HINTS $ENV{HPM_SDK_BASE})
 
 project(user_app)
