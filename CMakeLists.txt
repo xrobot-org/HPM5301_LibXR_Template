@@ -34,5 +34,3 @@ endif()
 
 # Add LibXR integration
 include(${CMAKE_CURRENT_LIST_DIR}/cmake/LibXR.CMake)
-
-generate_ide_projects()
