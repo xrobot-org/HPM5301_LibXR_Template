@@ -36,14 +36,6 @@ if(DEFINED APP_ELF_NAME AND TARGET ${APP_ELF_NAME})
     target_link_libraries(${APP_ELF_NAME} xr)
 endif()
 
-# Keep app in debug mode while shrinking LibXR binary size. The debug-ram preset runs all
-# code from the 128 KB ILM, which LibXR built at -O0 does not fit into.
-if(TARGET xr)
-    string(TOLOWER "${CMAKE_BUILD_TYPE}" _libxr_build_type)
-    if(_libxr_build_type STREQUAL "debug")
-        target_compile_options(xr PRIVATE -Os)
-    endif()
-endif()
 
 # C++ options the HPM SDK does not set (CubeMX writes the same ones into its STM32 toolchain
 # files): no exceptions, no RTTI and, on this single-threaded system, no thread-safe static
