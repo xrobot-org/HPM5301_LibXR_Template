@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 env:
-  HPM_SDK_VERSION: v1.11.0
+  HPM_SDK_VERSION: v1.13.0
 
 jobs:
   # Configuration check: formatting of the XRobot YAML files and a locked module resolution.
