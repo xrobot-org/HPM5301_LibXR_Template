@@ -45,6 +45,18 @@ if(TARGET xr)
     endif()
 endif()
 
+# C++ options the HPM SDK does not set (CubeMX writes the same ones into its STM32 toolchain
+# files): no exceptions, no RTTI and, on this single-threaded system, no thread-safe static
+# initialization. GCC 15 enables libstdc++ assertions at -O0; turn them off, since their
+# failure handler links the libstdc++ exception support.
+if(TARGET xr)
+    target_compile_options(xr PUBLIC
+        $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>
+        $<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>
+        $<$<COMPILE_LANGUAGE:CXX>:-fno-threadsafe-statics>
+        $<$<COMPILE_LANGUAGE:CXX>:-D_GLIBCXX_NO_ASSERTIONS>)
+endif()
+
 # Treat warnings in LibXR and in the application as errors; the SDK library targets keep
 # the SDK's own warning flags.
 if(TARGET xr)
