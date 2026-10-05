@@ -91,12 +91,11 @@ cmake --preset debug-flash-xip
 cmake --build --preset debug-flash-xip
 ```
 
-镜像 `ghcr.io/xrobot-org/docker-image-hpm:main` 提供 CMake、Ninja、Python 和工具链，工具链目录记录在环境变量 `XR_HPM_TOOLCHAIN_ROOT` 中，SDK 需另外挂载：
+镜像 `ghcr.io/xrobot-org/docker-image-hpm:main` 提供 CMake、Ninja、Python、工具链和 HPM SDK v1.13.0，并已设置 `HPM_SDK_BASE` 和 `GNURISCV_TOOLCHAIN_PATH`：
 
 ```bash
-docker run --rm -v "$PWD:/src" -v "$HPM_SDK_BASE:/sdk" -w /src -e HPM_SDK_BASE=/sdk \
-  ghcr.io/xrobot-org/docker-image-hpm:main \
-  bash -c 'export GNURISCV_TOOLCHAIN_PATH="$XR_HPM_TOOLCHAIN_ROOT" && pip install xrobot==1.0.0 && xrobot setup && cmake --preset debug-flash-xip && cmake --build --preset debug-flash-xip'
+docker run --rm -v "$PWD:/src" -w /src ghcr.io/xrobot-org/docker-image-hpm:main \
+  bash -c 'pip install xrobot==1.0.0 && xrobot setup && cmake --preset debug-flash-xip && cmake --build --preset debug-flash-xip'
 ```
 
 `xrobot setup` 拉取模块、检查配置并生成 `User/xrobot_main.hpp`。预设如下，构建目录均为 `build/`，产物为 `build/output/demo.elf` 和 `build/output/demo.bin`。
@@ -111,7 +110,7 @@ docker run --rm -v "$PWD:/src" -v "$HPM_SDK_BASE:/sdk" -w /src -e HPM_SDK_BASE=/
 
 `.github/workflows/build.yml` 在上述镜像中检查配置格式、按 `xrobot.lock` 解析模块，并以 HPM SDK v1.13.0 构建三个预设。其中的 `libxr-master` 作业每天运行一次，把 `libxr/` 更新到 LibXR 的 `master` 后构建，作业失败不影响工作流结果。
 
-Building needs HPM SDK v1.13.0, CMake (3.23 or newer), Ninja and the HPM RISC-V GCC toolchain. The environment variable `HPM_SDK_BASE` points at the SDK and `GNURISCV_TOOLCHAIN_PATH` at the toolchain directory. XRobot is 1.0.0, matching `xrobot:` in `Modules/modules.yaml`. The image `ghcr.io/xrobot-org/docker-image-hpm:main` provides CMake, Ninja, Python and the toolchain, and records the toolchain directory in the environment variable `XR_HPM_TOOLCHAIN_ROOT`; the SDK is mounted separately, as in the commands above.
+Building needs HPM SDK v1.13.0, CMake (3.23 or newer), Ninja and the HPM RISC-V GCC toolchain. The environment variable `HPM_SDK_BASE` points at the SDK and `GNURISCV_TOOLCHAIN_PATH` at the toolchain directory. XRobot is 1.0.0, matching `xrobot:` in `Modules/modules.yaml`. The image `ghcr.io/xrobot-org/docker-image-hpm:main` provides CMake, Ninja, Python, the toolchain and HPM SDK v1.13.0, with `HPM_SDK_BASE` and `GNURISCV_TOOLCHAIN_PATH` set, as in the commands above.
 
 `xrobot setup` fetches the Modules, checks the configurations and generates `User/xrobot_main.hpp`. The presets are listed above; all of them build in `build/` and produce `build/output/demo.elf` and `build/output/demo.bin`.
 
