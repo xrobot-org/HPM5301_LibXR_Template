@@ -67,3 +67,6 @@ Thumbs.db
 /User/xrobot_main.hpp
 /Modules/CMakeLists.txt
 /Modules/*/
+
+# HPM SDK clone made by CI
+/.hpm_sdk/

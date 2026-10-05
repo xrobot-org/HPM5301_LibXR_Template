@@ -56,18 +56,18 @@ jobs:
         id: sdk-cache
         uses: actions/cache@v4
         with:
-          path: ${{ runner.temp }}/hpm_sdk
+          path: .hpm_sdk
           key: hpm-sdk-${{ env.HPM_SDK_VERSION }}
 
       - name: Fetch the HPM SDK
         if: steps.sdk-cache.outputs.cache-hit != 'true'
         run: |
           git clone --depth 1 --branch "$HPM_SDK_VERSION" \
-            https://github.com/hpmicro/hpm_sdk "${{ runner.temp }}/hpm_sdk"
+            https://github.com/hpmicro/hpm_sdk .hpm_sdk
 
       - name: Select the SDK and the toolchain
         run: |
-          echo "HPM_SDK_BASE=${{ runner.temp }}/hpm_sdk" >> "$GITHUB_ENV"
+          echo "HPM_SDK_BASE=$GITHUB_WORKSPACE/.hpm_sdk" >> "$GITHUB_ENV"
           echo "GNURISCV_TOOLCHAIN_PATH=${XR_HPM_TOOLCHAIN_ROOT:-/opt/hpm-riscv32-unknown-elf}" >> "$GITHUB_ENV"
           git config --global --add safe.directory '*'
           git submodule status
@@ -103,18 +103,18 @@ jobs:
         id: sdk-cache
         uses: actions/cache@v4
         with:
-          path: ${{ runner.temp }}/hpm_sdk
+          path: .hpm_sdk
           key: hpm-sdk-${{ env.HPM_SDK_VERSION }}
 
       - name: Fetch the HPM SDK
         if: steps.sdk-cache.outputs.cache-hit != 'true'
         run: |
           git clone --depth 1 --branch "$HPM_SDK_VERSION" \
-            https://github.com/hpmicro/hpm_sdk "${{ runner.temp }}/hpm_sdk"
+            https://github.com/hpmicro/hpm_sdk .hpm_sdk
 
       - name: Update LibXR to master
         run: |
-          echo "HPM_SDK_BASE=${{ runner.temp }}/hpm_sdk" >> "$GITHUB_ENV"
+          echo "HPM_SDK_BASE=$GITHUB_WORKSPACE/.hpm_sdk" >> "$GITHUB_ENV"
           echo "GNURISCV_TOOLCHAIN_PATH=${XR_HPM_TOOLCHAIN_ROOT:-/opt/hpm-riscv32-unknown-elf}" >> "$GITHUB_ENV"
           git config --global --add safe.directory '*'
           git -C libxr fetch --depth 1 origin master
