@@ -52,7 +52,7 @@ struct BlinkState
     uint32_t last_toggle_ms = 0u;
 };
 
-constexpr uint8_t kPwmChannel = 2u;   // PB10 -> GPTMR0.COMP_2
+constexpr uint8_t kPwmChannel = 2u;   // PB10 and PA10 (LED2) -> GPTMR0.COMP_2
 constexpr uint8_t kPwmCmpIndex = 0u;
 constexpr uint32_t kPwmFreqHz = 1000u;
 constexpr uint32_t kDebounceMs = 30u;
@@ -202,10 +202,6 @@ int main(void)
     HPMTimebase timebase;
     (void)timebase;
 
-    // Keep PA10 in analog high-Z so external PB10 PWM does not get loaded.
-    HPMGPIO pa10(BOARD_LED_GPIO_CTRL, BOARD_LED_GPIO_INDEX, BOARD_LED_GPIO_PIN);
-    pa10.SetAnalogHighImpedance();
-
     HPMGPIO button(BOARD_APP_GPIO_CTRL, BOARD_APP_GPIO_INDEX, BOARD_APP_GPIO_PIN,
                    BOARD_APP_GPIO_IRQ);
     constexpr bool button_pressed_level = (BOARD_BUTTON_PRESSED_VALUE != 0u);
@@ -216,9 +212,11 @@ int main(void)
     button.RegisterCallback(GPIO::Callback::Create(OnButtonInterrupt, &g_button_irq_state));
     button.EnableInterrupt();
 
-    // PB10 pinmux/clock are initialized inside HPMPWM (GPTMR fallback path).
+    // PB10 pinmux/clock are initialized inside HPMPWM (GPTMR fallback path). LED2 on PA10
+    // is active low, so the output is inverted and PA10 is routed to the same comparator.
     HPMPWM pwm(reinterpret_cast<LibXRHpmPwmType*>(BOARD_GPTMR_PWM), BOARD_GPTMR_PWM_CLK_NAME,
-               kPwmChannel, kPwmCmpIndex, false);
+               kPwmChannel, kPwmCmpIndex, true);
+    HPM_IOC->PAD[IOC_PAD_PA10].FUNC_CTL = IOC_PA10_FUNC_CTL_GPTMR0_COMP_2;
     pwm.SetConfig({kPwmFreqHz});
     pwm.Enable();
 

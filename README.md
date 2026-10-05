@@ -19,9 +19,9 @@ The template targets the HPMicro HPM5301EVKLite board (HPM5301, RISC-V, 1 MB on-
 
 ## 2. 示例程序 / Example Application
 
-示例程序 `src/main.cpp` 由按键切换灯效：创建 `HPMTimebase`，由 PWM（`HPMPWM`，GPTMR0 通道 2，PB10，1 kHz）输出灯效波形。用户按键 PA3 配置为中断输入（`HPMGPIO`），中断中置位标志，主循环完成 30 ms 消抖。灯效有两种模式：呼吸（占空比 2% 至 90%，每 20 ms 变化 0.8%，两端各保持 500 ms）和 1 Hz 闪烁，每次按键在两种模式间切换。板子定义的 LED 引脚 PA10 配置为模拟高阻，以免加载外部接到 PB10 的 PWM 信号。
+示例程序 `src/main.cpp` 由按键切换灯效：创建 `HPMTimebase`，由 PWM（`HPMPWM`，GPTMR0 通道 2，1 kHz）驱动板载 LED2（PA10，低电平点亮，输出反相），PB10 输出同一波形。用户按键 PA3 配置为中断输入（`HPMGPIO`），中断中置位标志，主循环完成 30 ms 消抖。灯效有两种模式：呼吸（占空比 2% 至 90%，每 20 ms 变化 0.8%，两端各保持 500 ms）和 1 Hz 闪烁，每次按键在两种模式间切换。板子定义的 LED 引脚 PA10 配置为模拟高阻，以免加载外部接到 PB10 的 PWM 信号。
 
-The example application `src/main.cpp` selects a light effect with a key: it creates `HPMTimebase`, and a PWM (`HPMPWM`, GPTMR0 channel 2, PB10, 1 kHz) outputs the effect waveform. The user key on PA3 is an interrupt input (`HPMGPIO`) whose handler sets a flag, and the main loop debounces it over 30 ms. The effect has two modes, breathing (duty cycle 2% to 90%, changing by 0.8% every 20 ms, held 500 ms at each end) and a 1 Hz blink, and each key press switches between them. The LED pin defined by the board, PA10, is set to analog high impedance so that the external PWM signal connected to PB10 is not loaded.
+The example application `src/main.cpp` selects a light effect with a key: it creates `HPMTimebase`, and a PWM (`HPMPWM`, GPTMR0 channel 2, 1 kHz) drives the on-board LED2 (PA10, active low, inverted output); PB10 carries the same waveform. The user key on PA3 is an interrupt input (`HPMGPIO`) whose handler sets a flag, and the main loop debounces it over 30 ms. The effect has two modes, breathing (duty cycle 2% to 90%, changing by 0.8% every 20 ms, held 500 ms at each end) and a 1 Hz blink, and each key press switches between them. The LED pin defined by the board, PA10, is set to analog high impedance so that the external PWM signal connected to PB10 is not loaded.
 
 ## 3. 构建 / Build
 
@@ -60,11 +60,11 @@ cd "$HPM_SDK_BASE/boards/openocd"
 openocd -c "set HPM_SDK_BASE ${HPM_SDK_BASE}; set BOARD hpm5301evklite; set PROBE cmsis_dap;" -f hpm5300_all_in_one.cfg
 ```
 
-随后用 `riscv32-unknown-elf-gdb` 连接并下载 `build/output/demo.elf`。开发板的接口、跳线和引脚见 SDK 中的 `boards/hpm5301evklite/README_en.rst`。运行后 PB10 输出呼吸灯效的 PWM，按下用户按键切换为 1 Hz 闪烁，再次按下恢复呼吸。
+随后用 `riscv32-unknown-elf-gdb` 连接并下载 `build/output/demo.elf`。开发板的接口、跳线和引脚见 SDK 中的 `boards/hpm5301evklite/README_en.rst`。运行后板载 LED2 呈呼吸灯效，按下用户按键切换为 1 Hz 闪烁，再次按下恢复呼吸。
 
 With the `flash_xip` presets the firmware executes from the on-board QSPI NOR flash, and with the `ram` preset it is loaded into RAM. The board boots from flash when its boot switch is OFF. The SDK provides OpenOCD configurations in `hpm_sdk_localized_for_hpm5301evklite/boards/openocd/`, and `boards/hpm5301evklite/hpm5301evklite.yaml` names CMSIS-DAP as the default probe of the board. With the HPMicro build of OpenOCD, the debug server starts as in the commands above, which follow the usage described at the top of the SDK configuration file.
 
-Then `riscv32-unknown-elf-gdb` connects and downloads `build/output/demo.elf`. The board interfaces, jumpers and pins are described in `boards/hpm5301evklite/README_en.rst` in the SDK. At run time PB10 outputs the breathing PWM, a press of the user key switches to a 1 Hz blink, and another press returns to breathing.
+Then `riscv32-unknown-elf-gdb` connects and downloads `build/output/demo.elf`. The board interfaces, jumpers and pins are described in `boards/hpm5301evklite/README_en.rst` in the SDK. At run time the on-board LED2 breathes, a press of the user key switches to a 1 Hz blink, and another press returns to breathing.
 
 ## 许可 / License
 
