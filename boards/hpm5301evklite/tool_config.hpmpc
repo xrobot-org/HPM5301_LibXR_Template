@@ -1,15 +1,15 @@
 {
-  "clientKey": "efe33db4de097682f97a0e048f5fa5be",
-  "secretKey": "e141ea0d22c16546a58f84d62f61e3c3",
+  "clientKey": "e7ee1b8eb71cbdfffc3236f8bf62fbdf",
+  "secretKey": "52c36fb76cad5cb9a878bcdee4400bc0",
   "content": {
-    "pid": "45fc51f4-3ab5-4cf8-bb49-9f282db5197f",
+    "pid": "9497509b-eefd-4954-80df-5398d8aded77",
     "info": {
-      "projectName": "tool_config",
+      "projectName": "tool_config_trimmed_5301",
       "sdkName": "1.13.0",
       "socName": "HPM5301",
       "packageName": "QFN48",
-      "createTime": 1791229842930,
-      "updateTime": 1791277405065,
+      "createTime": 1791298383401,
+      "updateTime": 1791298383401,
       "vscodePid": "66927f38-37ed-42b1-8491-934af04e0eeb"
     },
     "pinmux": {
