@@ -21,32 +21,6 @@
 extern "C" {
 #endif
 
-void init_py_pins_as_pgpio(void);
-void init_uart0_pins(void);
-void init_uart3_pins(void);
-void init_uart3_pin_as_gpio(void);
-void init_i2c2_pins(void);
-void init_i2c3_pins(void);
-void init_gpio_pins(void);
-void init_spi1_pins(void);
-void init_spi1_pins_with_gpio_as_cs(void);
-void init_gptmr0_pins(void);
-void init_gptmr1_pins(void);
-void init_butn_pins(void);
-void init_acmp_pins(void);
-void init_adc_pins(void);
-void init_adc_bldc_pins(void);
-void init_usb0_pins(void);
-void init_led_pins_as_gpio(void);
-void init_uart_break_signal_pin(void);
-void init_gptmr0_channel1_pin_as_output(void);
-void init_gptmr0_channel2_pin_as_output(void);
-void init_gptmr0_channel3_pin_as_output(void);
-void init_gptmr0_channel1_pin_as_capture(void);
-void init_gptmr1_channel3_pin_as_output(void);
-void init_clk_ref_pin(void);
-void init_brownout_indicate_pin(void);
-void init_trgm_gptmr0_cap2_invert_pins(void);
 void init_bsp_pins(void);
 
 #ifdef __cplusplus
