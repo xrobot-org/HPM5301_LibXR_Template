@@ -7,11 +7,9 @@
 #include "board.h"
 #include "clock.h"
 #include "hpm_sdk_version.h"
-#include "hpm_gpio_drv.h"
 #include "hpm_usb_drv.h"
 #include "hpm_clock_drv.h"
 #include "hpm_pllctlv2_drv.h"
-#include "hpm_i2c_drv.h"
 #include "hpm_pcfg_drv.h"
 
 /**
@@ -237,87 +235,6 @@ void board_ungate_mchtmr_at_lp_mode(void)
     sysctl_set_cpu_lp_mode(HPM_SYSCTL, BOARD_RUNNING_CORE, cpu_lp_mode_ungate_cpu_clock);
 }
 
-void board_led_write(uint8_t state)
-{
-    gpio_write_pin(BOARD_LED_GPIO_CTRL, BOARD_LED_GPIO_INDEX, BOARD_LED_GPIO_PIN, state);
-}
-
-void board_led_toggle(void)
-{
-    gpio_toggle_pin(BOARD_LED_GPIO_CTRL, BOARD_LED_GPIO_INDEX, BOARD_LED_GPIO_PIN);
-}
-
-void board_disable_output_rgb_led(uint8_t color)
-{
-    (void) color;
-}
-
-void board_enable_output_rgb_led(uint8_t color)
-{
-    (void) color;
-}
-
-uint8_t board_get_led_gpio_off_level(void)
-{
-    return BOARD_LED_OFF_LEVEL;
-}
-
 void board_init_pmp(void)
 {
-}
-
-void board_i2c_bus_clear(I2C_Type *ptr)
-{
-    if (i2c_get_line_scl_status(ptr) == false) {
-        printf("CLK is low, please power cycle the board\n");
-        while (1) {
-        }
-    }
-    if (i2c_get_line_sda_status(ptr) == false) {
-        printf("SDA is low, try to issue I2C bus clear\n");
-    } else {
-        printf("I2C bus is ready\n");
-        return;
-    }
-    i2c_gen_reset_signal(ptr, 9);
-    board_delay_ms(100);
-    printf("I2C bus is cleared\n");
-}
-
-uint32_t board_init_i2c_clock(I2C_Type *ptr)
-{
-    uint32_t freq = 0;
-
-    if (ptr == HPM_I2C3) {
-        init_i2c3_clock();
-        freq = clock_get_frequency(clock_i2c3);
-    }
-
-    return freq;
-}
-
-void init_i2c_pins(I2C_Type *ptr)
-{
-    (void)ptr;
-    /* I2C pins are configured by init_bsp_pins(). */
-}
-
-void board_init_gptmr_channel_pin(GPTMR_Type *ptr, uint32_t channel, bool as_comp)
-{
-    (void)ptr;
-    (void)channel;
-    (void)as_comp;
-    /* GPTMR pins are configured by init_bsp_pins(). */
-}
-
-uint32_t board_init_gptmr_clock(GPTMR_Type *ptr)
-{
-    uint32_t freq = 0U;
-    if (ptr == HPM_GPTMR0) {
-        init_gptmr0_clock();
-        freq = clock_get_frequency(clock_gptmr0);
-    } else {
-        /* Not supported */
-    }
-    return freq;
 }

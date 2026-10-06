@@ -54,11 +54,11 @@ extern "C" void app_main(void)
   // PWM
   static HPMPWM pwm_gptmr0_ch1(reinterpret_cast<LibXRHpmPwmType*>(BOARD_GPTMR_PWM),
                                BOARD_GPTMR_PWM_CLK_NAME, BOARD_GPTMR_PWM_CHANNEL, 0,
-                               false, false);
+                               HPMPWM::Polarity::NORMAL);
   pwm_gptmr0_ch1.SetConfig({1000});
 
   // I2C
-  static HPMI2C i2c3(BOARD_APP_I2C_BASE, BOARD_APP_I2C_CLK_NAME, false);
+  static HPMI2C i2c3(BOARD_APP_I2C_BASE, BOARD_APP_I2C_CLK_NAME, {100000U});
 
   // Hardware registration
   XR_REGISTER(LED, LibXR::GPIO);
