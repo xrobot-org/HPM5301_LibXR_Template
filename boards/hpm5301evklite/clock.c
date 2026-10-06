@@ -65,21 +65,6 @@ void init_uart3_clock(void)
     clock_add_to_group(clock_uart3, 0);
 }
 
-void init_i2c0_clock(void)
-{
-    clock_add_to_group(clock_i2c0, 0);
-}
-
-void init_i2c1_clock(void)
-{
-    clock_add_to_group(clock_i2c1, 0);
-}
-
-void init_i2c2_clock(void)
-{
-    clock_add_to_group(clock_i2c2, 0);
-}
-
 void init_i2c3_clock(void)
 {
     clock_add_to_group(clock_i2c3, 0);
@@ -98,28 +83,9 @@ void init_adc0_bus_clock(void)
     clock_add_to_group(clock_adc0, 0);
 }
 
-void init_adc0_analog_clock(void)
-{
-    /* Generate clk_top_adc0 code */
-    clock_set_adc_source(clock_adc0, clk_adc_src_ana0);
-    clock_set_source_divider(clock_ana0, clk_src_pll0_clk2, 2);
-
-    clock_add_to_group(clock_adc0, 0);
-}
-
 void init_gptmr0_clock(void)
 {
     clock_add_to_group(clock_gptmr0, 0);
-}
-
-void init_gptmr1_clock(void)
-{
-    clock_add_to_group(clock_gptmr1, 0);
-}
-
-void init_ptmr_clock(void)
-{
-    clock_add_to_group(clock_ptmr, 0);
 }
 
 void init_usb0_clock(void)

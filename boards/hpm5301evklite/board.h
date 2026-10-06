@@ -319,61 +319,32 @@
 extern "C" {
 #endif /* __cplusplus */
 
-typedef void (*board_timer_cb)(void);
-
-void board_init_gpio_pins(void);
-void board_init_led_pins(void);
-void board_init_usb(USB_Type *ptr);
+void board_init_console(void);
 void board_led_write(uint8_t state);
 void board_led_toggle(void);
-void board_init_console(void);
-void board_init_uart(UART_Type *ptr);
-uint32_t board_init_spi_clock(SPI_Type *ptr);
-void board_init_spi_pins(SPI_Type *ptr);
-uint32_t board_init_adc_clock(void *ptr, bool clk_src_bus);
-void board_init_adc16_pins(void);
-void board_init_acmp_pins(void);
-void board_init_acmp_clock(ACMP_Type *ptr);
 void board_disable_output_rgb_led(uint8_t color);
 void board_enable_output_rgb_led(uint8_t color);
-void board_write_spi_cs(uint32_t pin, uint8_t state);
-void board_init_spi_pins_with_gpio_as_cs(SPI_Type *ptr);
 
 void board_init(void);
 void board_init_usb_dp_dm_pins(void);
 void board_init_clock(void);
 void board_delay_us(uint32_t us);
 void board_delay_ms(uint32_t ms);
-void board_timer_create(uint32_t ms, board_timer_cb cb);
 void board_ungate_mchtmr_at_lp_mode(void);
 
 uint8_t board_get_led_gpio_off_level(void);
 
 void board_init_pmp(void);
 
-uint32_t board_init_uart_clock(UART_Type *ptr);
-
 uint32_t board_init_i2c_clock(I2C_Type *ptr);
-void board_init_i2c(I2C_Type *ptr);
 
 void board_init_gptmr_channel_pin(GPTMR_Type *ptr, uint32_t channel, bool as_comp);
-void board_init_clk_ref_pin(void);
 uint32_t board_init_gptmr_clock(GPTMR_Type *ptr);
 
 /*
  * Wrap pinmux initialization.
  */
-void init_uart_pins(UART_Type *ptr);
-void init_uart_pin_as_gpio(UART_Type *ptr);
 void init_i2c_pins(I2C_Type *ptr);
-void init_spi_pins(SPI_Type *ptr);
-void init_spi_pins_with_gpio_as_cs(SPI_Type *ptr);
-void init_gptmr_pins(GPTMR_Type *ptr);
-void init_usb_pins(USB_Type *ptr);
-void init_gptmr_channel_pin(GPTMR_Type *ptr, uint32_t channel, bool as_output);
-void board_init_brownout_indicate_pin(void);
-
-void init_sent_decode_pins(bool idle_high);
 
 #if defined(__cplusplus)
 }
