@@ -84,7 +84,7 @@ void board_init_console(void)
     console_config_t cfg;
 
     /* Console pins (PA00 TX / PA01 RX) are configured by init_bsp_pins(),
-     * which main.cpp runs before board_init(). */
+     * which main.c runs before board_init(). */
 
     init_uart0_clock();
 
