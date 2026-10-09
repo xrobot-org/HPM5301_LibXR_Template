@@ -98,7 +98,7 @@ docker run --rm -v "$PWD:/src" -w /src ghcr.io/xrobot-org/docker-image-hpm:main 
   bash -c 'pip install xrobot==1.0.0 && xrobot setup && cmake --preset debug-flash-xip && cmake --build --preset debug-flash-xip'
 ```
 
-`xrobot setup` 拉取模块、检查配置并生成 `User/xrobot_main.hpp`。预设如下，构建目录均为 `build/`，产物为 `build/output/demo.elf` 和 `build/output/demo.bin`。
+`xrobot setup` 拉取模块、检查配置并生成 `User/xrobot_main.hpp`。预设如下，每个预设的构建目录是 `build/<预设名>/`，产物为其中的 `output/demo.elf` 和 `output/demo.bin`，例如 `build/release-flash-xip/output/demo.elf`。
 
 | 预设 | `CMAKE_BUILD_TYPE` | `HPM_BUILD_TYPE` |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ docker run --rm -v "$PWD:/src" -w /src ghcr.io/xrobot-org/docker-image-hpm:main 
 
 Building needs HPM SDK v1.13.0, CMake (3.23 or newer), Ninja and the HPM RISC-V GCC toolchain. The environment variable `HPM_SDK_BASE` points at the SDK and `GNURISCV_TOOLCHAIN_PATH` at the toolchain directory. XRobot is 1.0.0, matching `xrobot:` in `Modules/modules.yaml`. The image `ghcr.io/xrobot-org/docker-image-hpm:main` provides CMake, Ninja, Python, the toolchain and HPM SDK v1.13.0, with `HPM_SDK_BASE` and `GNURISCV_TOOLCHAIN_PATH` set, as in the commands above.
 
-`xrobot setup` fetches the Modules, checks the configurations and generates `User/xrobot_main.hpp`. The presets are listed above; all of them build in `build/` and produce `build/output/demo.elf` and `build/output/demo.bin`.
+`xrobot setup` fetches the Modules, checks the configurations and generates `User/xrobot_main.hpp`. The presets are listed above; each builds in `build/<preset>/` and produces `output/demo.elf` and `output/demo.bin` there, for example `build/release-flash-xip/output/demo.elf`.
 
 `cmake/LibXR.CMake` adds `-fno-exceptions -fno-rtti -fno-threadsafe-statics` and `-D_GLIBCXX_NO_ASSERTIONS` to the C++ code; the HPM SDK does not set these options. In Debug builds the application code is built with `-O0` and LibXR with `-Os`; with the `debug-ram` preset all code runs from the 128 KB ILM.
 
@@ -126,9 +126,9 @@ Building needs HPM SDK v1.13.0, CMake (3.23 or newer), Ninja and the HPM RISC-V 
 JLinkExe -Device HPM5301xEGx -If JTAG -JTAGConf -1,-1 -Speed 4000 -AutoConnect 1
 ```
 
-在 J-Link Commander 中执行 `loadfile build/output/demo.elf`、`r`、`g`。OpenOCD 使用 SDK `boards/openocd/` 中的芯片和探针配置与板目录中的 `hpm5301evklite.cfg`，用法见这些配置文件的头部。运行后 LED 按 250 ms 周期闪烁。
+在 J-Link Commander 中执行 `loadfile build/release-flash-xip/output/demo.elf`、`r`、`g`。OpenOCD 使用 SDK `boards/openocd/` 中的芯片和探针配置与板目录中的 `hpm5301evklite.cfg`，用法见这些配置文件的头部。运行后 LED 按 250 ms 周期闪烁。
 
-With the `flash_xip` presets the firmware executes from the on-board QSPI NOR flash, and with the `ram` preset it is loaded into RAM. The KEY&BOOT key is also the boot mode key: holding it during reset enters ISP mode, and it is released for normal operation. The JTAG connector of the board works with J-Link, as in the command above; in J-Link Commander, `loadfile build/output/demo.elf`, `r` and `g` download and start the firmware. OpenOCD uses the SoC and probe configurations in `boards/openocd/` of the SDK together with `hpm5301evklite.cfg` in the board directory, as described at the top of these files. At run time the LED blinks with a 250 ms cycle.
+With the `flash_xip` presets the firmware executes from the on-board QSPI NOR flash, and with the `ram` preset it is loaded into RAM. The KEY&BOOT key is also the boot mode key: holding it during reset enters ISP mode, and it is released for normal operation. The JTAG connector of the board works with J-Link, as in the command above; in J-Link Commander, `loadfile build/release-flash-xip/output/demo.elf`, `r` and `g` download and start the firmware. OpenOCD uses the SoC and probe configurations in `boards/openocd/` of the SDK together with `hpm5301evklite.cfg` in the board directory, as described at the top of these files. At run time the LED blinks with a 250 ms cycle.
 
 ## 6. 修改引脚与时钟 / Changing Pins and Clocks
 
