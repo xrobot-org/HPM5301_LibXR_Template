@@ -3,26 +3,18 @@
 
 cmake_minimum_required(VERSION 3.13)
 
+# The board lives in boards/ next to the application; the SDK comes from HPM_SDK_BASE.
+set(BOARD_SEARCH_PATH ${CMAKE_CURRENT_SOURCE_DIR}/boards)
 
-# the following lines before "### END ###" are added during project localization
-### START ###
-set(ENV{HPM_SDK_BASE} "${CMAKE_CURRENT_SOURCE_DIR}/hpm_sdk_localized_for_hpm5301evklite")
-set(LOCALIZED_BOARD "hpm5301evklite")
-if(BOARD)
-  if(NOT ${BOARD} MATCHES ${LOCALIZED_BOARD})
-    message(FATAL_ERROR "ABORT:\n hpm sdk has been localized for ${LOCALIZED_BOARD} already.")
-  endif()
-endif()
-set(BOARD ${LOCALIZED_BOARD})
-### END ###
-
+# LibXR HPM drivers require the HPM SDK dma_mgr component.
+set(CONFIG_DMA_MGR 1)
 
 find_package(hpm-sdk REQUIRED HINTS $ENV{HPM_SDK_BASE})
 
 project(user_app)
 
-sdk_app_inc(inc)
-sdk_app_src(src/main.cpp)
+sdk_app_src(main.c User/app_main.cpp)
+sdk_app_inc(User)
 
 # Debugging profile:
 # - keep application entry source easy to debug

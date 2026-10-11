@@ -1,4 +1,4 @@
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Path to your local LibXR repository.
@@ -36,10 +36,24 @@ if(DEFINED APP_ELF_NAME AND TARGET ${APP_ELF_NAME})
     target_link_libraries(${APP_ELF_NAME} xr)
 endif()
 
-# Keep app in debug mode while shrinking LibXR binary size.
+
+# C++ options the HPM SDK does not set (CubeMX writes the same ones into its STM32 toolchain
+# files): no exceptions, no RTTI and, on this single-threaded system, no thread-safe static
+# initialization. GCC 15 enables libstdc++ assertions at -O0; turn them off, since their
+# failure handler links the libstdc++ exception support.
 if(TARGET xr)
-    string(TOLOWER "${CMAKE_BUILD_TYPE}" _libxr_build_type)
-    if(_libxr_build_type STREQUAL "debug")
-        target_compile_options(xr PRIVATE -O0)
-    endif()
+    target_compile_options(xr PUBLIC
+        $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>
+        $<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>
+        $<$<COMPILE_LANGUAGE:CXX>:-fno-threadsafe-statics>
+        $<$<COMPILE_LANGUAGE:CXX>:-D_GLIBCXX_NO_ASSERTIONS>)
+endif()
+
+# Treat warnings in LibXR and in the application as errors; the SDK library targets keep
+# the SDK's own warning flags.
+if(TARGET xr)
+    target_compile_options(xr PRIVATE -Werror)
+endif()
+if(TARGET app)
+    target_compile_options(app PRIVATE -Werror)
 endif()
